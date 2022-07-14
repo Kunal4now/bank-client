@@ -1,54 +1,30 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import Sidebar from './Sidebar'
-import AccountCard from './AccountCard'
 import { Route, Routes, useNavigate } from 'react-router';
 import Transactions from './Transactions';
 import Transfer from './Transfer';
+import UserDashboard from './UserDashboard';
+import AdminDashboard from './AdminDashboard';
+import UserContext from '../context/user/UserContext';
 
 function Home() {
-  const [user, setUser] = useState({})
-  let navigate = useNavigate();
-  const fetchUserDetails = async () => {
-    if (!localStorage.token || !localStorage.user) {
-      navigate('/')
-      return
-    }
-    const user = JSON.parse(localStorage.user)
-    let response = await fetch(`http://localhost:5000/api/users/${user.id}`, {
-      method: 'GET',
-      headers: {
-        'content-Type': 'application/json',
-        'token': localStorage.token
-      }
-    });
+  const context = useContext(UserContext);
+  const { user, getUser, getSidebarOptions, sidebarOptions } = context;
 
-    const json = await response.json();
-
-    setUser(json)
-  }
   useEffect(() => {
-    fetchUserDetails()
+    getUser();
+    getSidebarOptions();
   }, [])
 
   return (
     <>
-    <Sidebar/>
-    <div className="container">
-      <div className="container" style={{padding: "25px"}}>
-        <h1>{"Welcome " + String(user.name)}</h1>
-      </div>
-      <div className="container" style={{display: "flex"}}>
-        <div className="container" style={{display: "flex", alignItems: "center"}}>
-          <AccountCard accountNo = {user.accountNo} balance = {user.balance}/>
-        </div>
-        <div className="container">
-        </div>
-      </div>
-    </div>
-    <Routes>
+    {user.role !== null ? <Sidebar options = {sidebarOptions} /> : <p>Loading</p> }
+    {user.role !== null ? (user.role === 'user' && <UserDashboard name = {user.name} accountNo = {user.accountNo} balance = {user.balance} />) : <p>Loading</p>}
+    {user !== null ? (user.role === 'admin' && <AdminDashboard/>) : <p>Loading</p>}
+    {/* <Routes>
       <Route path="transaction" element={<Transactions/>}/>
       <Route path='transfer' element={<Transfer/>}></Route>
-    </Routes>
+    </Routes> */}
     </>
   )
 }

@@ -1,13 +1,18 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
+import userContext from "../context/user/UserContext";
 
 export default function Table() {
     const [contact, setContact] = useState([]);
+    const context = useContext(userContext);
+    const { user, getUser } = context;
+
     useEffect(() => {
         getContacts();
+        getUser();
     }, []);
     
     const getContacts = async () => {
-        const response = await fetch("http://localhost:5000/api/transactions/", {
+        const response = await fetch("https://minibank-server.herokuapp.com/api/transactions/", {
             method: 'GET',
             headers: {
                 'content-Type': 'application/json',
@@ -18,22 +23,20 @@ export default function Table() {
         setContact(json)
     }
     return (
-    <div className="container py-4">
+    <div className="container py-4 d-flex">
         <table className="table">
         <thead className="thead-light">
             <tr>
-            <th scope="col">#</th>
             <th scope="col">Account No.</th>
             <th scope="col">Amount</th>
             </tr>
         </thead>
         <tbody>
-            {contact && contact.map((element, index) => {
+            {user.role && contact && contact.map((element, index) => {
                 return (
                     <tr key = {index}>
-                        <th scope="row">{index}</th>
-                        <td>{element.sent === true ? element.receiver : element.sender}</td>
-                        <td>{element.sent === true ? -element.amount : element.amount}</td>
+                        <td>{element.receiver}</td>
+                        <td><p style={{fontWeight: 'bold', color: element.type === 'debit' ? 'red' : 'green'}}>$ {element.type == 'debit' ? -element.amount : element.amount}</p></td>
                     </tr>
                 )
             })}

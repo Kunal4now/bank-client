@@ -19,7 +19,9 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 
-import { Link } from 'react-router-dom';
+import { useEffect, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import UserContext from '../context/user/UserContext';
 
 const drawerWidth = 240;
 
@@ -68,9 +70,12 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-export default function PersistentDrawerLeft() {
+export default function PersistentDrawerLeft(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const context = useContext(UserContext);
+
+  const { user, getUser, getSidebarOptions, sidebarOptions, setOriginalState } = context;
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -80,17 +85,25 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
 
+  let navigate = useNavigate();
+
   const handleSignout = () => {
     localStorage.clear();
-    window.location.reload();
+    navigate('/')
   }
+
+  useEffect(() => {
+    getUser();
+    getSidebarOptions();
+  }, [])
+  
 
   return (
     <Box sx={{ display: 'flex', flexGrow: 1 }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
-          <IconButton
+          {user.role !== null && <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
@@ -98,11 +111,11 @@ export default function PersistentDrawerLeft() {
             sx={{ mr: 2, ...(open && { display: 'none' }) }}
           >
             <MenuIcon />
-          </IconButton>
+          </IconButton>}
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Mini Bank
           </Typography>
-          <div className="btn btn-danger" onClick={handleSignout}>Signout</div>
+          {user.role !== null && <div className="btn btn-danger" onClick={handleSignout}>Signout</div>}
         </Toolbar>
       </AppBar>
       <Drawer
@@ -125,7 +138,7 @@ export default function PersistentDrawerLeft() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Home', 'Transactions', 'Transfer'].map((text, index) => (
+          {sidebarOptions.map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
