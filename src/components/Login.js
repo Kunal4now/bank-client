@@ -8,11 +8,12 @@ export default function Login() {
     const [credentials, setCredentials] = useState({email: "", password: ""});
     const context = useContext(UserContext);
     const setOriginalState = context.setOriginalState;
+    const { user, getUser } = context;
+    let navigate = useNavigate();
     useEffect(() => {
         setOriginalState()
     }, [])
     
-    let navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
         let response = await fetch("https://minibank-server.herokuapp.com/api/auth/login", {
@@ -23,13 +24,12 @@ export default function Login() {
             body: JSON.stringify({email: credentials.email, password: credentials.password})
         });
         const json = await response.json();
-        const user = JSON.stringify(json.user)
         if (json.success) {
+            const user = JSON.stringify(json.user)
             localStorage.setItem('token', json.token)
             localStorage.setItem('user', user)
             navigate("dashboard")
         } else {
-            
             alert("Invalid credentials")
         }
     }

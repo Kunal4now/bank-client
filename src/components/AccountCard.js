@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import { Link } from 'react-router-dom'
 
 function AccountCard(props) {
     return (
@@ -14,9 +15,9 @@ function AccountCard(props) {
                 </div>
                 <p style={{fontSize: "40px", fontWeight: "bold"}}>${props.balance}</p>
             </div>
-            <div className="btn btn-primary">
+            <Link to={'/dashboard/transfer'}><div className="btn btn-primary">
                 Transfer money
-            </div>
+            </div></Link>
         </div>
     )
 }
