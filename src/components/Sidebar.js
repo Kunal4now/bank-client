@@ -75,7 +75,7 @@ export default function PersistentDrawerLeft(props) {
   const [open, setOpen] = React.useState(false);
   const context = useContext(UserContext);
 
-  const { user, getUser, getSidebarOptions, sidebarOptions, setOriginalState } = context;
+  const { user, getUser, getSidebarOptions, sidebarOptions } = context;
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -89,7 +89,7 @@ export default function PersistentDrawerLeft(props) {
 
   const handleSignout = () => {
     localStorage.clear();
-    navigate('/')
+    navigate('/', {replace: true})
   }
 
   useEffect(() => {
@@ -115,7 +115,7 @@ export default function PersistentDrawerLeft(props) {
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Mini Bank
           </Typography>
-          {user.role !== null && <div className="btn btn-danger" onClick={handleSignout}>Signout</div>}
+          {localStorage.token !== undefined && <div className="btn btn-danger" onClick={handleSignout}>Signout</div>}
         </Toolbar>
       </AppBar>
       <Drawer

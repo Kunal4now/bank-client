@@ -1,23 +1,18 @@
 import { useState, useContext, useEffect } from "react";
-import { useNavigate } from 'react-router-dom'
 import React from 'react';
 import UserContext from '../context/user/UserContext';
 import Sidebar from './Sidebar';
+import { useNavigate, Navigate } from "react-router-dom";
 
 export default function Login() {
     const [credentials, setCredentials] = useState({email: "", password: ""});
     const context = useContext(UserContext);
-    const setOriginalState = context.setOriginalState;
     const { user, getUser } = context;
-    let navigate = useNavigate();
+    const setOriginalState = context.setOriginalState;
     useEffect(() => {
-        if (localStorage.token) {
-            navigate("/dashboard")
-            return
-        }
         setOriginalState()
     }, [])
-    
+    let navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
         let response = await fetch("https://minibank-server.herokuapp.com/api/auth/login", {
@@ -28,11 +23,12 @@ export default function Login() {
             body: JSON.stringify({email: credentials.email, password: credentials.password})
         });
         const json = await response.json();
+        // navigate to dashboard after login
         if (json.success) {
             const user = JSON.stringify(json.user)
             localStorage.setItem('token', json.token)
-            localStorage.setItem('user', user)
-            navigate("/dashboard")
+            localStorage.setItem('user', user);
+            navigate('/dashboard/home', {replace: true})
         } else {
             alert("Invalid credentials")
         }
@@ -45,6 +41,9 @@ export default function Login() {
         <>
         <Sidebar/>
         <div className='container d-flex justify-content-center'>
+            {user.role !== null && (
+            <Navigate to="/dashboard/home" replace={true} />
+            )}
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email address</label>

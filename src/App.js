@@ -17,7 +17,7 @@ function App() {
       <UserState>
         <Routes>
             <Route path = "/" element={<Login/>}/>
-            <Route element={<ProtectedRoute auth={localStorage.token ? true : false}/>} >
+            <Route element={<ProtectedRoute auth={localStorage.token !== undefined ? true : false}/>} >
               <Route path="/dashboard/*" element = {<Home/>}/>
               <Route path="/dashboard/home/*" element = {<Home/>}/>
               <Route path='/dashboard/transactions' element={<Transactions/>}/>
