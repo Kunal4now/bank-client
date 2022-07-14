@@ -89,6 +89,7 @@ export default function PersistentDrawerLeft(props) {
 
   const handleSignout = () => {
     localStorage.clear();
+    window.location.reload();
     navigate('/', {replace: true})
   }
 

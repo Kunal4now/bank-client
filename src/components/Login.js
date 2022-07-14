@@ -29,6 +29,7 @@ export default function Login() {
             localStorage.setItem('token', json.token)
             localStorage.setItem('user', user);
             navigate('/dashboard/home', {replace: true})
+            window.location.reload();
         } else {
             alert("Invalid credentials")
         }
