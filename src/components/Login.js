@@ -11,6 +11,10 @@ export default function Login() {
     const { user, getUser } = context;
     let navigate = useNavigate();
     useEffect(() => {
+        if (localStorage.token) {
+            navigate("/dashboard")
+            return
+        }
         setOriginalState()
     }, [])
     
@@ -28,7 +32,7 @@ export default function Login() {
             const user = JSON.stringify(json.user)
             localStorage.setItem('token', json.token)
             localStorage.setItem('user', user)
-            navigate("dashboard")
+            navigate("/dashboard")
         } else {
             alert("Invalid credentials")
         }
@@ -36,6 +40,7 @@ export default function Login() {
     const onChange = (e) => {
         setCredentials({...credentials, [e.target.name]: e.target.value})
     }
+    
     return(
         <>
         <Sidebar/>

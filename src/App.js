@@ -9,20 +9,23 @@ import Transfer from './components/Transfer';
 import UserState from './context/user/UserState';
 import Signup from './components/Signup';
 import CreditDebit from './components/CreditDebit';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
     <div>
       <UserState>
         <Routes>
-            <Route path = "/" element = {<Login/>}/>
-            <Route path="/dashboard/*" element = {<Home/>}/>
-            <Route path="/dashboard/home/*" element = {<Home/>}/>
-            <Route path='/dashboard/transactions' element={<Transactions/>}/>
-            <Route path='/dashboard/transfer' element={<Transfer/>}/>
-            <Route path='/dashboard/users' element={<UserTable/>} />
-            <Route path='/dashboard/users/create' element={<Signup/>} />
-            <Route path='/dashboard/creditdebit' element={<CreditDebit/>} />
+            <Route path = "/" element={<Login/>}/>
+            <Route element={<ProtectedRoute auth={localStorage.token ? true : false}/>} >
+              <Route path="/dashboard/*" element = {<Home/>}/>
+              <Route path="/dashboard/home/*" element = {<Home/>}/>
+              <Route path='/dashboard/transactions' element={<Transactions/>}/>
+              <Route path='/dashboard/transfer' element={<Transfer/>}/>
+              <Route path='/dashboard/users' element={<UserTable/>} />
+              <Route path='/dashboard/users/create' element={<Signup/>} />
+              <Route path='/dashboard/creditdebit' element={<CreditDebit/>} />
+            </Route>
         </Routes>
       </UserState>
     </div>

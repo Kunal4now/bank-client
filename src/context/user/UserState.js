@@ -11,6 +11,16 @@ const UserState = (props) => {
         id: ""
     });
 
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+    const logIn = () => {
+        if (localStorage.token) {
+            setIsLoggedIn(true)
+        } else {
+            setIsLoggedIn(false)
+        }
+    }
+
     const [sidebarOptions, setsidebarOptions] = useState([]);
 
     let navigate = useNavigate();
@@ -52,7 +62,7 @@ const UserState = (props) => {
     }
 
     return (
-        <userContext.Provider value={{user, getUser, getSidebarOptions, sidebarOptions, setOriginalState}}>
+        <userContext.Provider value={{user, getUser, getSidebarOptions, sidebarOptions, setOriginalState, isLoggedIn, logIn}}>
             {props.children}
         </userContext.Provider>
     )
