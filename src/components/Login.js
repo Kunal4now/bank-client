@@ -31,7 +31,8 @@ export default function Login() {
             navigate('/dashboard/home', {replace: true})
             window.location.reload();
         } else {
-            alert("Invalid credentials")
+            let errors = json.messg.join('\n')
+            alert(errors)
         }
     }
     const onChange = (e) => {

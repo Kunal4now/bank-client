@@ -22,14 +22,14 @@ function CreditDebit() {
               'Content-Type': 'application/json',
               'token': localStorage.token
           },
-          body: JSON.stringify({accountNo: credentials.accountNo, amount: credentials.amount})
+          body: JSON.stringify({accountNo: credentials.accountNo, amount: credentials.amount, type: credentials.type})
         });
         let json = await response.json()
-        console.log(json)
         if (json.success) {
           navigate('/dashboard')
         } else {
-          alert(json.messg)
+          let errors = json.messg.join('\n')
+          alert(errors)
         }
       } catch (error) {
         console.log(error)

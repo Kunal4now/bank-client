@@ -24,7 +24,8 @@ function Signup() {
         if (json.success) {
             alert("User created")
         } else {
-            alert("Some error occured")
+            let errors = json.messg.join('\n')
+            alert(errors)
         }
     }
     return (

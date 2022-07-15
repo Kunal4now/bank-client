@@ -28,7 +28,8 @@ function Transfer() {
         if (json.success) {
           navigate('/dashboard')
         } else {
-          alert(json.messg)
+          let errors = json.messg.join('\n')
+          alert(errors)
         }
       } catch (error) {
         alert(error)
