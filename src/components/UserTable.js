@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import Sidebar from './Sidebar'
-import {Link} from 'react-router-dom'
+import {Link, Navigate, useNavigate} from 'react-router-dom'
 
 function UserTable() {
 
@@ -17,8 +17,11 @@ function UserTable() {
         const json = await response.json();
         setUsers(json)
     }
-
+    let navigate = useNavigate();
     useEffect(() => {
+        // if (localStorage.user.role !== 'admin') {
+        //     navigate('/')
+        // }
         getUsers()
     }
     , [])
